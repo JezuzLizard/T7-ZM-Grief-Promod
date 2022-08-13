@@ -48,7 +48,81 @@ function register( str_system, func_preinit, func_postinit, reqs = [] )
 		AssertMsg( "system '" + str_system + "' is already defined once. Please use a different name for your system." );
 		return;
 	}
-	
+	switch ( str_system )
+	{
+		case "bgb":
+		case "bgb_machine":
+		case "bgb_token":
+		case "zm_bgb_aftertaste":
+		case "zm_bgb_aftertaste":
+		case "zm_bgb_alchemical_antithesis":
+		case "zm_bgb_alchemical_antithesis":
+		case "zm_bgb_always_done_swiftly":
+		case "zm_bgb_always_done_swiftly":
+		case "zm_bgb_anywhere_but_here":
+		case "zm_bgb_armamental_accomplishment":
+		case "zm_bgb_arms_grace":
+		case "zm_bgb_arsenal_accelerator":
+		case "zm_bgb_board_games":
+		case "zm_bgb_board_to_death":
+		case "zm_bgb_bullet_boost":
+		case "zm_bgb_burned_out":
+		case "zm_bgb_cache_back":
+		case "zm_bgb_coagulant":
+		case "zm_bgb_crate_power":
+		case "zm_bgb_crawl_space":
+		case "zm_bgb_danger_closest":
+		case "zm_bgb_dead_of_nuclear_winter":
+		case "zm_bgb_disorderly_combat":
+		case "zm_bgb_ephemeral_enhancement":
+		case "zm_bgb_extra_credit":
+		case "zm_bgb_eye_candy":
+		case "zm_bgb_fatal_contraption":
+		case "zm_bgb_fear_in_headlights":
+		case "zm_bgb_firing_on_all_cylinders":
+		case "zm_bgb_flavor_hexed":
+		case "zm_bgb_head_drama":
+		case "zm_bgb_idle_eyes":
+		case "zm_bgb_im_feelin_lucky":
+		case "zm_bgb_immolation_liquidation":
+		case "zm_bgb_impatient":
+		case "zm_bgb_in_plain_sight":
+		case "zm_bgb_kill_joy":
+		case "zm_bgb_killing_time":
+		case "zm_bgb_licensed_contractor":
+		case "zm_bgb_lucky_crit":
+		case "zm_bgb_mind_blown":
+		case "zm_bgb_near_death_experience":
+		case "zm_bgb_newtonian_negation":
+		case "zm_bgb_now_you_see_me":
+		case "zm_bgb_on_the_house":
+		case "zm_bgb_perkaholic":
+		case "zm_bgb_phoenix_up":
+		case "zm_bgb_pop_shocks":
+		case "zm_bgb_power_vacuum":
+		case "zm_bgb_profit_sharing":
+		case "zm_bgb_projectile_vomiting":
+		case "zm_bgb_reign_drops":
+		case "zm_bgb_respin_cycle":
+		case "zm_bgb_round_robbin":
+		case "zm_bgb_secret_shopper":
+		case "zm_bgb_self_medication":
+		case "zm_bgb_shopping_free":
+		case "zm_bgb_slaughter_slide":
+		case "zm_bgb_soda_fountain":
+		case "zm_bgb_stock_option":
+		case "zm_bgb_sword_flay":
+		case "zm_bgb_temporal_gift":
+		case "zm_bgb_tone_death":
+		case "zm_bgb_unbearable":
+		case "zm_bgb_undead_man_walking":
+		case "zm_bgb_unquenchable":
+		case "zm_bgb_wall_power":
+		case "zm_bgb_whos_keeping_score":
+			return;
+		default:
+			break;
+	}
 	//append to the func_init array, we'll sort based on reqs before we run everything
 	DEFAULT( level.system_funcs, [] );
 	

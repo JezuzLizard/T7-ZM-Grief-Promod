@@ -226,25 +226,25 @@ function LUI.createMenu.T7Hud_zm_factory(InstanceRef)
     HudRef:addElement(NotificationWidget)
     HudRef.Notifications = NotificationWidget
     
-    local GumWidget = CoD.ZmNotifBGB_ContainerFactory.new(HudRef, InstanceRef)
-    GumWidget:setLeftRight(false, false, -156.000000, 156.000000)
-    GumWidget:setTopBottom(true, false, -6.000000, 247.000000)
-    GumWidget:setScale(0.750000)
+    -- local GumWidget = CoD.ZmNotifBGB_ContainerFactory.new(HudRef, InstanceRef)
+    -- GumWidget:setLeftRight(false, false, -156.000000, 156.000000)
+    -- GumWidget:setTopBottom(true, false, -6.000000, 247.000000)
+    -- GumWidget:setScale(0.750000)
     
-    local function GumCallback(ModelRef)
-        if IsParamModelEqualToString(ModelRef, "zombie_bgb_token_notification") then
-            AddZombieBGBTokenNotification(HudRef, GumWidget, InstanceRef, ModelRef)
-        elseif IsParamModelEqualToString(ModelRef, "zombie_bgb_notification") then
-            AddZombieBGBNotification(HudRef, GumWidget, ModelRef)
-        elseif IsParamModelEqualToString(ModelRef, "zombie_notification") then
-            AddZombieNotification(HudRef, GumWidget, ModelRef)
-        end
-    end
+    -- local function GumCallback(ModelRef)
+    --     if IsParamModelEqualToString(ModelRef, "zombie_bgb_token_notification") then
+    --         AddZombieBGBTokenNotification(HudRef, GumWidget, InstanceRef, ModelRef)
+    --     elseif IsParamModelEqualToString(ModelRef, "zombie_bgb_notification") then
+    --         AddZombieBGBNotification(HudRef, GumWidget, ModelRef)
+    --     elseif IsParamModelEqualToString(ModelRef, "zombie_notification") then
+    --         AddZombieNotification(HudRef, GumWidget, ModelRef)
+    --     end
+    -- end
     
-    GumWidget:subscribeToGlobalModel(InstanceRef, "PerController", "scriptNotify", GumCallback)
+    -- GumWidget:subscribeToGlobalModel(InstanceRef, "PerController", "scriptNotify", GumCallback)
     
-    HudRef:addElement(GumWidget)
-    HudRef.ZmNotifBGBContainerFactory = GumWidget
+    -- HudRef:addElement(GumWidget)
+    -- HudRef.ZmNotifBGBContainerFactory = GumWidget
 
     local HintWidget = CoD.ZMCursorHint.new(HudRef, InstanceRef)
     HintWidget:setLeftRight(false, false, -250.000000, 250.000000)
@@ -493,12 +493,12 @@ function LUI.createMenu.T7Hud_zm_factory(InstanceRef)
     HudRef:addElement(ChatContainer2)
     HudRef.IngameChatClientContainer0 = ChatContainer2
     
-    local GumPack = CoD.BubbleGumPackInGame.new(HudRef, InstanceRef)
-    GumPack:setLeftRight(false, false, -184.000000, 184.000000)
-    GumPack:setTopBottom(true, false, 36.000000, 185.000000)
+    -- local GumPack = CoD.BubbleGumPackInGame.new(HudRef, InstanceRef)
+    -- GumPack:setLeftRight(false, false, -184.000000, 184.000000)
+    -- GumPack:setTopBottom(true, false, 36.000000, 185.000000)
     
-    HudRef:addElement(GumPack)
-    HudRef.BubbleGumPackInGame = GumPack
+    -- HudRef:addElement(GumPack)
+    -- HudRef.BubbleGumPackInGame = GumPack
     
     -- ScoreWidget.navigation = {up = ScoreCP, right = ScoreCP}
     -- ScoreCP.navigation = {left = ScoreWidget, down = ScoreWidget}
@@ -529,7 +529,7 @@ function LUI.createMenu.T7Hud_zm_factory(InstanceRef)
         SenderObj.Score:close()
         SenderObj.fullscreenContainer:close()
         SenderObj.Notifications:close()
-        SenderObj.ZmNotifBGBContainerFactory:close()
+        -- SenderObj.ZmNotifBGBContainerFactory:close()
         SenderObj.CursorHint:close()
         SenderObj.ConsoleCenter:close()
         SenderObj.DeadSpectate:close()
@@ -540,7 +540,7 @@ function LUI.createMenu.T7Hud_zm_factory(InstanceRef)
         SenderObj.RocketShieldBlueprintWidget:close()
         SenderObj.IngameChatClientContainer:close()
         SenderObj.IngameChatClientContainer0:close()
-        SenderObj.BubbleGumPackInGame:close()
+        -- SenderObj.BubbleGumPackInGame:close()
         SenderObj.DevWins:close()
         
         Engine.GetModel(Engine.GetModelForController(InstanceRef), "T7Hud_zm_factory.buttonPrompts")
