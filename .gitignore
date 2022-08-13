@@ -1,0 +1,5 @@
+*.ff
+*.gdb
+/mod/zone_source/english
+/mod/zone_source/all
+/mod/zone_source/loc
