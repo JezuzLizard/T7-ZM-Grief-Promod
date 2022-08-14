@@ -5245,6 +5245,8 @@ function player_damage_override_cheat( eInflictor, eAttacker, iDamage, iDFlags, 
 //
 function player_damage_override( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, weapon, vPoint, vDir, sHitLoc, psOffsetTime )
 {
+	if ( isdefined( level._game_module_player_damage_callback ) )
+        self [[ level._game_module_player_damage_callback ]]( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, weapon, vPoint, vDir, sHitLoc, psOffsetTime );
 	iDamage = self check_player_damage_callbacks( eInflictor, eAttacker, iDamage, iDFlags, sMeansOfDeath, weapon, vPoint, vDir, sHitLoc, psOffsetTime );
 	
 	if( self.scene_takedamage === false )
