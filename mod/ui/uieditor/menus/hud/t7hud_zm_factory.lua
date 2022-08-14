@@ -13,6 +13,7 @@ require("ui.uieditor.widgets.HUD.DeadSpectate.DeadSpectate")
 require("ui.uieditor.widgets.MPHudWidgets.ScorePopup.MPScr")
 require("ui.uieditor.widgets.HUD.ZM_PrematchCountdown.ZM_PrematchCountdown")
 require("ui.uieditor.widgets.Scoreboard.CP.ScoreboardWidgetCP")
+-- require("ui.uieditor.widgets.Scoreboard.ScoreboardWidget")
 require("ui.uieditor.widgets.HUD.ZM_TimeBar.ZM_BeastmodeTimeBarWidget")
 require("ui.uieditor.widgets.ZMInventory.RocketShieldBluePrint.RocketShieldBlueprintWidget")
 require("ui.uieditor.widgets.Chat.inGame.IngameChatClientContainer")
@@ -436,6 +437,7 @@ function LUI.createMenu.T7Hud_zm_factory(InstanceRef)
     HudRef.ZMPrematchCountdown0 = PreMatch
     
     local ScoreCP = CoD.ScoreboardWidgetCP.new(HudRef, InstanceRef)
+	-- local ScoreCP = CoD.ScoreboardWidget.new(HudRef, InstanceRef)
     ScoreCP:setLeftRight(false, false, -503.000000, 503.000000)
     ScoreCP:setTopBottom(true, false, 247.000000, 773.000000)
     

@@ -12,7 +12,8 @@ require("ui.uieditor.widgets.HUD.CenterConsole.CenterConsole")
 require("ui.uieditor.widgets.HUD.DeadSpectate.DeadSpectate")
 require("ui.uieditor.widgets.MPHudWidgets.ScorePopup.MPScr")
 require("ui.uieditor.widgets.HUD.ZM_PrematchCountdown.ZM_PrematchCountdown")
-require("ui.uieditor.widgets.Scoreboard.CP.ScoreboardWidgetCP")
+-- require("ui.uieditor.widgets.Scoreboard.CP.ScoreboardWidgetCP")
+require("ui.uieditor.widgets.Scoreboard.ScoreboardWidget")
 require("ui.uieditor.widgets.HUD.ZM_TimeBar.ZM_BeastmodeTimeBarWidget")
 require("ui.uieditor.widgets.ZMInventory.RocketShieldBluePrint.RocketShieldBlueprintWidget")
 require("ui.uieditor.widgets.Chat.inGame.IngameChatClientContainer")
@@ -28,8 +29,8 @@ local function PostLoadCallback(HudRef, InstanceRef)
     CoD.Zombie.CommonPostLoadHud(HudRef, InstanceRef)
 end
 
-function LUI.createMenu.T7Hud_zm_factory(InstanceRef)
-    local HudRef = CoD.Menu.NewForUIEditor("T7Hud_zm_factory")
+function LUI.createMenu.T7Hud_zm_dlc5(InstanceRef)
+    local HudRef = CoD.Menu.NewForUIEditor("T7Hud_zm_dlc5")
     
     if PreLoadCallback then
         PreLoadCallback(HudRef, InstanceRef)
@@ -40,7 +41,7 @@ function LUI.createMenu.T7Hud_zm_factory(InstanceRef)
     HudRef:setTopBottom(true, true, 0, 0)
     HudRef:playSound("menu_open", InstanceRef)
     
-    HudRef.buttonModel = Engine.CreateModel(Engine.GetModelForController(InstanceRef), "T7Hud_zm_factory.buttonPrompts")
+    HudRef.buttonModel = Engine.CreateModel(Engine.GetModelForController(InstanceRef), "T7Hud_zm_dlc5.buttonPrompts")
     HudRef.anyChildUsesUpdateState = true
     
     local PerksWidget = CoD.ZMPerksContainerFactory.new(HudRef, InstanceRef)
@@ -435,7 +436,8 @@ function LUI.createMenu.T7Hud_zm_factory(InstanceRef)
     HudRef:addElement(PreMatch)
     HudRef.ZMPrematchCountdown0 = PreMatch
     
-    local ScoreCP = CoD.ScoreboardWidgetCP.new(HudRef, InstanceRef)
+    -- local ScoreCP = CoD.ScoreboardWidgetCP.new(HudRef, InstanceRef)
+	local ScoreCP = CoD.ScoreboardWidget.new(HudRef, InstanceRef)
     ScoreCP:setLeftRight(false, false, -503.000000, 503.000000)
     ScoreCP:setTopBottom(true, false, 247.000000, 773.000000)
     
@@ -543,7 +545,7 @@ function LUI.createMenu.T7Hud_zm_factory(InstanceRef)
         -- SenderObj.BubbleGumPackInGame:close()
         SenderObj.DevWins:close()
         
-        Engine.GetModel(Engine.GetModelForController(InstanceRef), "T7Hud_zm_factory.buttonPrompts")
+        Engine.GetModel(Engine.GetModelForController(InstanceRef), "T7Hud_zm_dlc5.buttonPrompts")
         Engine.UnsubscribeAndFreeModel()
     end
     

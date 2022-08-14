@@ -28,8 +28,8 @@ local function PostLoadCallback(HudRef, InstanceRef)
     CoD.Zombie.CommonPostLoadHud(HudRef, InstanceRef)
 end
 
-function LUI.createMenu.T7Hud_zm_factory(InstanceRef)
-    local HudRef = CoD.Menu.NewForUIEditor("T7Hud_zm_factory")
+function LUI.createMenu.T7Hud_zm_tomb(InstanceRef)
+    local HudRef = CoD.Menu.NewForUIEditor("T7Hud_zm_tomb")
     
     if PreLoadCallback then
         PreLoadCallback(HudRef, InstanceRef)
@@ -40,7 +40,7 @@ function LUI.createMenu.T7Hud_zm_factory(InstanceRef)
     HudRef:setTopBottom(true, true, 0, 0)
     HudRef:playSound("menu_open", InstanceRef)
     
-    HudRef.buttonModel = Engine.CreateModel(Engine.GetModelForController(InstanceRef), "T7Hud_zm_factory.buttonPrompts")
+    HudRef.buttonModel = Engine.CreateModel(Engine.GetModelForController(InstanceRef), "T7Hud_zm_tomb.buttonPrompts")
     HudRef.anyChildUsesUpdateState = true
     
     local PerksWidget = CoD.ZMPerksContainerFactory.new(HudRef, InstanceRef)
@@ -543,7 +543,7 @@ function LUI.createMenu.T7Hud_zm_factory(InstanceRef)
         -- SenderObj.BubbleGumPackInGame:close()
         SenderObj.DevWins:close()
         
-        Engine.GetModel(Engine.GetModelForController(InstanceRef), "T7Hud_zm_factory.buttonPrompts")
+        Engine.GetModel(Engine.GetModelForController(InstanceRef), "T7Hud_zm_tomb.buttonPrompts")
         Engine.UnsubscribeAndFreeModel()
     end
     
