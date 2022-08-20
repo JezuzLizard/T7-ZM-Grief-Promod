@@ -150,7 +150,6 @@ function function_8921895f()
 		if(var_77917a61)
 		{
 			continue;
-			continue;
 		}
 		var_d7a75a6e[var_d7a75a6e.size] = var_cdb0f86b[i];
 	}
