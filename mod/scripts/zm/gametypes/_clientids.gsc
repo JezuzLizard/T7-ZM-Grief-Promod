@@ -2,6 +2,7 @@
 
 #using scripts\shared\callbacks_shared;
 #using scripts\shared\system_shared;
+#using scripts\shared\util_shared;
 
 #using scripts\shared\laststand_shared;
 #using scripts\zm\_zm_laststand;
@@ -23,12 +24,23 @@ function init()
 	// this is now handled in code ( not lan )
 	// see s_nextScriptClientId 
 	level.clientid = 0;
+	level.zombie_ai_limit = 64;
+	level.zombie_actor_limit = 64;
+	if ( isDefined( level.grief_ffa ) && level.grief_ffa )
+	{
+		level.grief_ffa_team_character_index = randomint( 4 );
+	}
+	else 
+	{
+		level.grief_character_index_teams = [];
+		character_index_array = array( 0, 1, 2, 3 );
+		random_index = character_index_array[ randomint( character_index_array.size ) ];
+		arrayRemoveIndex( character_index_array, random_index );
+		level.grief_character_index_teams[ "allies" ] = random_index;
+		level.grief_character_index_teams[ "axis" ] = character_index_array[ randomint( character_index_array.size ) ];
+	}
+	level.givecustomcharacters = &givecustomcharacters_override;
 	level.player_too_many_players_check = false;
-	level._game_module_player_damage_callback = &game_module_player_damage_callback;
-	level._game_module_player_damage_grief_callback = &game_module_player_damage_grief_callback;
-	level.prevent_player_damage = &player_prevent_damage;
-	level.no_end_game_check = true;
-	level.round_number = 20;
 	level.teamcount = 2;
 	level.multiteam = level.teamcount > 2;
 	if(sessionmodeiszombiesgame())
@@ -58,6 +70,7 @@ function init()
 	}
 	logprint( "Adding bots\n" );
 	level thread add_bots();
+	level thread emptyLobbyRestart();
 }
 
 function disable_intersection_tracker( player )
@@ -116,7 +129,82 @@ function on_player_connect()
 		self.pers[ "team" ] = "allies";
 		self._encounters_team = "B";
 	}
+
+	if ( !isDefined( self.last_griefed_by ) )
+	{
+		self.last_griefed_by = spawnStruct();
+		self.last_griefed_by.attacker = undefined;
+		self.last_griefed_by.meansofdeath = undefined;
+		self.last_griefed_by.weapon = undefined;
+		self.last_griefed_by.time = 0;
+		self thread watch_for_down();
+	}
+	self.killsconfirmed = 0;
+	self.stabs = 0;
+	self thread on_player_spawn();
 }
+
+function watch_for_down()
+{
+	level endon( "end_game" );
+	self endon( "disconnect" );
+	while ( true )
+	{
+		level flag::wait_till("spawn_zombies");
+		in_laststand = self laststand::player_is_in_laststand();
+		is_alive = isAlive( self );
+		if ( isDefined( in_laststand ) && in_laststand || !( isDefined( is_alive ) && is_alive ) )
+		{
+			if ( isDefined( self.last_griefed_by.attacker ) )
+			{
+				//self scripts\zm\promod_grief\_damage::player_steal_points( self.last_griefed_by.attacker, "down_player" );
+				if ( isDefined( self.last_griefed_by.weapon ) && isDefined( self.last_griefed_by.meansofdeath ) && ( ceil( ( getTime() - self.last_griefed_by.time ) / 1000 ) < 4 ) )
+				{
+					obituary( self, self.last_griefed_by.attacker, self.last_griefed_by.weapon, self.last_griefed_by.meansofdeath );
+					self.last_griefed_by.attacker.killsconfirmed++;
+				}
+				else 
+				{
+					obituary(self, self, "none", "MOD_SUICIDE");
+				}
+			}
+			else 
+			{
+				obituary(self, self, "none", "MOD_SUICIDE");
+			}
+			//self thread change_status_icon( is_alive );
+			self util::waittill_either( "player_revived", "spawned_player" );
+			//self.statusicon = "";
+		}
+		wait 0.05;
+	}
+}
+
+function on_player_spawn()
+{
+	level endon("end_game");
+	self endon( "disconnect" );
+
+	while(1)
+	{
+		self waittill( "spawned_player" );
+
+		// if ( self.score < level.grief_gamerules[ "round_restart_points" ].current )
+		// {
+		// 	self.score = level.grief_gamerules[ "round_restart_points" ].current;
+		// }
+		self.score = 10000;
+
+		// if ( level.grief_gamerules[ "reduced_pistol_ammo" ].current )
+		// {
+		// 	self scripts\zm\promod_grief\_gamerules::reduce_starting_ammo();
+		// }
+
+		//self scripts\zm\promod_grief\_gamerules::set_visionset();
+		//self thread give_upgraded_melee();
+	}
+}
+
  
 
 function game_module_player_damage_callback( einflictor, eattacker, idamage, idflags, smeansofdeath, sweapon, vpoint, vdir, shitloc, psoffsettime ) //checked partially changed output to cerberus output
@@ -237,4 +325,47 @@ function player_prevent_damage( einflictor, eattacker, idamage, idflags, smeanso
         return true;
 
     return false;
+}
+
+function givecustomcharacters_override()
+{
+	self detachall();
+	if ( !isdefined( self.characterindex ) )
+	{
+		if ( isDefined( level.grief_ffa ) && level.grief_ffa )
+		{
+			self.character_index = level.grief_ffa_team_character_index;
+		}
+		else 
+		{
+			self.characterindex = level.grief_character_index_teams[ self.team ];
+		}
+	}
+	self setcharacterbodytype(self.characterindex);
+	self setcharacterbodystyle(0);
+	self setcharacterhelmetstyle(0);
+	self setmovespeedscale(1);
+	self setsprintduration(4);
+	self setsprintcooldown(0);
+}
+
+function emptyLobbyRestart()
+{
+	while ( true)
+	{
+		players = getPlayers();
+		if ( players.size > 0 )
+		{
+			while ( true )
+			{
+				players = getPlayers();
+				if ( players.size < 1 )
+				{
+					level notify( "end_game" );
+				}
+				wait 1;
+			}
+		}
+		wait 1;
+	}
 }
