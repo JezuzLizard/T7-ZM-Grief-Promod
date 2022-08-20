@@ -73,15 +73,20 @@ function maySpawn()
 {
 	if ( isdefined( level.playerMaySpawn ) && !( self [[level.playerMaySpawn]]() ) )
 	{
+		iprintln( "Player cannot spawn due to level.playerMaySpawn" );
 		return false;
 	}
 	
 	if ( level.inOvertime )
+	{
+		iprintln( "Player cannot spawn due to level.inOvertime" );
 		return false;
-
+	}
 	if ( level.playerQueuedRespawn && !isdefined(self.allowQueueSpawn) && !level.inGracePeriod && !level.useStartSpawns )
+	{
+		iprintln( "Player cannot spawn due to level.playerQueuedRespawn" );
 		return false;
-
+	}
 	if ( level.numLives )
 	{
 		if ( level.teamBased )
@@ -91,13 +96,18 @@ function maySpawn()
 
 		if ( !self.pers["lives"] && gameHasStarted )
 		{
+			iprintln( "Player cannot spawn due to having no lives left" );
 			return false;
 		}
 		else if ( gameHasStarted )
 		{
 			// disallow spawning for late comers
 			if ( !level.inGracePeriod && !self.hasSpawned && !level.wagerMatch )
+			{
+				iprintln( "Player cannot spawn due to !level.inGracePeriod" );
 				return false;
+			}
+				
 		}
 	}
 	return true;
