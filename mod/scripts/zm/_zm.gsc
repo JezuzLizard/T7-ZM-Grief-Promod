@@ -1289,7 +1289,7 @@ function init_levelvars()
 	level.laststandpistol				= level.default_laststandpistol;		// so we dont get the uber colt when we're knocked out
 	level.start_weapon					= level.default_laststandpistol;
 	level.first_round					= true;	
-	level.start_round					= GetGametypeSetting( "startRound" );
+	level.start_round					= 20;
 	level.round_number					= level.start_round;
 	level.enable_magic					= GetGametypeSetting( "magic" );
 	level.headshots_only				= GetGametypeSetting( "headshotsonly" );	
