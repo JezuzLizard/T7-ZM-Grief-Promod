@@ -99,16 +99,15 @@ function maySpawn()
 			iprintln( "Player cannot spawn due to having no lives left" );
 			return false;
 		}
-		else if ( gameHasStarted )
-		{
-			// disallow spawning for late comers
-			if ( !level.inGracePeriod && !self.hasSpawned && !level.wagerMatch )
-			{
-				iprintln( "Player cannot spawn due to !level.inGracePeriod" );
-				return false;
-			}
-				
-		}
+		// else if ( gameHasStarted )
+		// {
+		// 	// disallow spawning for late comers
+		// 	if ( !level.inGracePeriod && !self.hasSpawned && !level.wagerMatch )
+		// 	{
+		// 		iprintln( "Player cannot spawn due to !level.inGracePeriod" );
+		// 		return false;
+		// 	}
+		// }
 	}
 	return true;
 }

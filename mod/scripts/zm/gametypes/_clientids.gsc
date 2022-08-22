@@ -3,6 +3,7 @@
 #using scripts\shared\callbacks_shared;
 #using scripts\shared\system_shared;
 #using scripts\shared\util_shared;
+#using scripts\shared\flag_shared;
 
 #using scripts\shared\laststand_shared;
 #using scripts\zm\_zm_laststand;
@@ -41,6 +42,9 @@ function init()
 	}
 	level.givecustomcharacters = &givecustomcharacters_override;
 	level.player_too_many_players_check = false;
+	level._game_module_player_damage_callback = &game_module_player_damage_callback;
+	level._game_module_player_damage_grief_callback = &game_module_player_damage_grief_callback;
+	level.prevent_player_damage = &player_prevent_damage;
 	level.teamcount = 2;
 	level.multiteam = level.teamcount > 2;
 	if(sessionmodeiszombiesgame())
@@ -68,7 +72,6 @@ function init()
 		level.teams["team" + teamindex] = "team" + teamindex;
 		level.teamindex["team" + teamindex] = teamindex;
 	}
-	logprint( "Adding bots\n" );
 	level thread add_bots();
 	level thread emptyLobbyRestart();
 }
@@ -80,22 +83,23 @@ function disable_intersection_tracker( player )
 
 function add_bots()
 {
-	wait 1;
+	level flag::wait_till("initial_blackscreen_passed");
+	logprint( "Adding bots\n" );
 	max_clients = getDvarInt( "com_maxclients" );
 	level.player_intersection_tracker_override = &disable_intersection_tracker;
 	for( i = 1; i < max_clients; i++ )
 	{
-		bot = addTestClient();
-		bot [[ level.spawnPlayer ]]();
 		wait 0.05;
+		bot = addTestClient();
+		bot [[ level.spawnPlayer ]]();	
 	}
 	wait 5;
-	level.player_intersection_tracker_override = undefined;
-	bgbs = getEntArray( "zbarrier_zmcore_bgb_machine", "classname" );
-	for( index = 0; index < bgbs.size; index++ )
-	{
-		bgbs[index] Delete();
-	}
+	//level.player_intersection_tracker_override = undefined;
+	// bgbs = getEntArray( "zbarrier_zmcore_bgb_machine", "classname" );
+	// for( index = 0; index < bgbs.size; index++ )
+	// {
+	// 	bgbs[index] Delete();
+	// }
 }
 
 function on_player_connect()
@@ -104,32 +108,8 @@ function on_player_connect()
 	if ( !isdefined( self.clientid ) || self.clientid == -1 )
 	{
 		self.clientid = level.clientid;
-		level.clientid++;	// Is this safe? What if a server runs for a long time and many people join/leave
+		level.clientid++;
 	}
-	teamplayersallies = countplayers( "allies");
-	teamplayersaxis = countplayers( "axis");
-	if ( teamplayersallies > teamplayersaxis )
-	{
-		self.team = "axis";
-		self.sessionteam = "axis";
-		self.pers[ "team" ] = "axis";
-		self._encounters_team = "A";
-	}
-	else if ( teamplayersallies < teamplayersaxis )
-	{
-		self.team = "allies";
-		self.sessionteam = "allies";
-		self.pers[ "team" ] = "allies";
-		self._encounters_team = "B";
-	}
-	else
-	{
-		self.team = "allies";
-		self.sessionteam = "allies";
-		self.pers[ "team" ] = "allies";
-		self._encounters_team = "B";
-	}
-
 	if ( !isDefined( self.last_griefed_by ) )
 	{
 		self.last_griefed_by = spawnStruct();
@@ -291,6 +271,7 @@ function game_module_player_damage_grief_callback( einflictor, eattacker, idamag
 			// {
 			// 	self.is_reviving_grief = 1;
 			// }
+			logprint( "KNBK: " + eattacker.name + " " + self.name + " " + idamage + " " + vdir + "\n" );
 			self applyknockback( idamage, vdir );
 		}
 		// else if ( is_weapon_shotgun( sweapon ) )
@@ -321,7 +302,7 @@ function game_module_player_damage_grief_callback( einflictor, eattacker, idamag
 
 function player_prevent_damage( einflictor, eattacker, idamage, idflags, smeansofdeath, sweapon, vpoint, vdir, shitloc, psoffsettime )
 {
-    if ( isdefined( eattacker ) && isplayer( eattacker ) && self != eattacker && !eattacker hasperk( "specialty_noname" ) && !( isdefined( self.is_zombie ) && self.is_zombie ) )
+    if ( isdefined( eattacker ) && isplayer( eattacker ) && self != eattacker && !( isdefined( self.is_zombie ) && self.is_zombie ) )
         return true;
 
     return false;
@@ -362,6 +343,7 @@ function emptyLobbyRestart()
 				if ( players.size < 1 )
 				{
 					level notify( "end_game" );
+					return;
 				}
 				wait 1;
 			}

@@ -279,7 +279,7 @@ function Callback_PlayerConnect()
 
 	if ( isdefined( self.pers["class"] ) )
 		self.curClass = self.pers["class"];
-		
+
 	if ( !isdefined( self.pers["team"] ) || isdefined( self.pers["needteam"] ) )
 	{
 		// Don't set .sessionteam until we've gotten the assigned team from code,
@@ -336,7 +336,6 @@ function Callback_PlayerConnect()
 		self globallogic_ui::updateObjectiveText();
 		
 		[[level.spawnSpectator]]();
-		
 		if ( globallogic_utils::isValidClass( self.pers["class"] ) )
 		{
 			self thread [[level.spawnClient]]();			
@@ -344,8 +343,7 @@ function Callback_PlayerConnect()
 		else
 		{
 			self globallogic_ui::showMainMenuForTeam();
-		}
-		
+		}		
 		self thread spectating::setSpectatePermissions();
 	}
 

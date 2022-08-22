@@ -672,8 +672,6 @@ function onAllPlayersReady()
 			} 
 		}
 		wait( 0.1 );	
-		logline1 = "_zm.gsc onAllPlayersReady() waiting for all players to be ready " + "\n";
-		logprint( logline1 );
 	}
 
 	SetInitialPlayersConnected();
@@ -1284,12 +1282,12 @@ function init_levelvars()
 	// used to a check in last stand for players to become zombies
 	level.is_zombie_level				= true; 
 	level.default_laststandpistol 		= GetWeapon( "pistol_standard" );
-	level.default_solo_laststandpistol	= GetWeapon( "pistol_standard_upgraded" );
+	level.default_solo_laststandpistol	= GetWeapon( "pistol_standard" );
 	level.super_ee_weapon				= GetWeapon( "pistol_burst" );
 	level.laststandpistol				= level.default_laststandpistol;		// so we dont get the uber colt when we're knocked out
 	level.start_weapon					= level.default_laststandpistol;
 	level.first_round					= true;	
-	level.start_round					= 20;
+	level.start_round					= 1;
 	level.round_number					= level.start_round;
 	level.enable_magic					= GetGametypeSetting( "magic" );
 	level.headshots_only				= GetGametypeSetting( "headshotsonly" );	
@@ -3812,6 +3810,7 @@ function get_safe_breadcrumb_pos( player )
 
 function round_spawning()
 {
+	logprint( "round_spawning is called \n" );
 	level endon( "intermission" );
 	level endon( "end_of_round" );
 	level endon( "restart_round" );
@@ -3849,7 +3848,8 @@ function round_spawning()
 	// Now set the total for the new round, except when it's already been set by the kill counter
 	if ( !( IsDefined( level.kill_counter_hud ) && level.zombie_total > 0 ) )
 	{
-		level.zombie_total = get_zombie_count_for_round( level.round_number, level.players.size );
+		//level.zombie_total = get_zombie_count_for_round( level.round_number, level.players.size );
+		level.zombie_total = 99999;
 		level.zombie_respawns = 0;	// reset number of zombies needing respawn
 		level notify( "zombie_total_set" );
 	}
@@ -3869,11 +3869,13 @@ function round_spawning()
 	{
 		while( zombie_utility::get_current_zombie_count() >= level.zombie_ai_limit || level.zombie_total <= 0 )
 		{
+			logprint( "Too many alive zombies to spawn a new zombie \n" );
 			wait( 0.1 );
 		}
 		
 		while ( zombie_utility::get_current_actor_count() >= level.zombie_actor_limit )
 		{
+			logprint( "Too many zombies and corpses to spawn a new zombie \n" );
 			zombie_utility::clear_all_corpses();
 			wait( 0.1 );
 		}
@@ -3885,7 +3887,9 @@ function round_spawning()
 		}
 
 		// added ability to pause zombie spawning
+		logprint( "Waiting for flag spawn_zombies \n" );
 		level flag::wait_till( "spawn_zombies" );
+		logprint( "Done waiting for flag spawn_zombies \n" );
 		
 		//Not great fix for this being zero - which it should NEVER be! (2 days to ship - PETER)
 		while( level.zm_loc_types[ "zombie_location" ].size <= 0 )
@@ -3897,6 +3901,7 @@ function round_spawning()
 		
 		if ( IS_TRUE(level.hostMigrationTimer) )
 		{
+			logprint( "level.hostMigrationTimer is true \n" );
 			util::wait_network_frame();
 			continue;
 		}
@@ -3907,6 +3912,7 @@ function round_spawning()
 			if ( [[ level.fn_custom_round_ai_spawn ]]() )
 			{
 				// we handled the spawn
+				logprint( "level.fn_custom_round_ai_spawn is defined and true \n" );
 				util::wait_network_frame();
 				continue;
 			}
@@ -3969,7 +3975,10 @@ function round_spawning()
 				wait( level.zombie_vars["zombie_spawn_delay"] );
 			}
 		}
-
+		else 
+		{
+			logprint( "Failed to spawn zombie \n" );
+		}
 		util::wait_network_frame();
 	}
 }

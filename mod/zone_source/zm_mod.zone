@@ -6,7 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 rawfile,dummy.cfg
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-//scriptparsetree,scripts/zm/_zm.gsc
+scriptparsetree,scripts/zm/_zm.gsc //Not causing ingame menu regression
 scriptparsetree,scripts/zm/_zm_score.gsc
 scriptparsetree,scripts/shared/load_shared.gsc
 scriptparsetree,scripts/shared/system_shared.gsc
@@ -14,7 +14,7 @@ scriptparsetree,scripts/shared/system_shared.csc
 scriptparsetree,scripts/zm/gametypes/_clientids.gsc
 scriptparsetree,scripts/zm/gametypes/_globallogic_player.gsc
 scriptparsetree,scripts/zm/gametypes/_globallogic_spawn.gsc
-scriptparsetree,scripts/zm/gametypes/zclassic.gsc
+scriptparsetree,scripts/zm/gametypes/zclassic.gsc //The cause of the zombies not spawning
 scriptparsetree,scripts/zm/gametypes/zclassic.csc
 scriptparsetree,scripts/zm/_zm_ffotd.csc
 scriptparsetree,scripts/zm/_zm_laststand.gsc
