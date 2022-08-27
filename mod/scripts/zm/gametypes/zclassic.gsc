@@ -24,7 +24,7 @@ function main()
 	level._game_module_player_laststand_callback = &grief_laststand_weapon_save;
 	level.onplayerspawned_restore_previous_weapons = &grief_laststand_weapons_return;
 	level.game_module_onplayerconnect = &grief_onplayerconnect;
-	level.autoassign = &autoassign_override;
+	//level.autoassign = &autoassign_override;
 	callback::on_start_gametype( &init );
 }
 
@@ -313,30 +313,76 @@ function grief_round_end_custom_logic()
 
 function autoassign_override( comingFromMenu )
 {
-	teamplayersallies = countplayers( "allies");
-	teamplayersaxis = countplayers( "axis");
-	logprint( "teamplayersallies: " + teamplayersallies + " teamplayersaxis: " + teamplayersaxis + " " + self.name );
-	if ( teamplayersallies > teamplayersaxis )
+	if ( !isDefined( level.grief_team_members ) )
 	{
+		level.grief_team_members = [];
+		level.grief_team_members[ "allies" ] = [];
+		level.grief_team_members[ "axis" ] = [];
+		level.grief_team_members[ "allies" ][ 0 ] = self;
+		self.team = "allies";
+		self.sessionteam = "allies";
+		self.pers[ "team" ] = "allies";
+		self._encounters_team = "B";
+	}
+	else if ( level.grief_team_members[ "axis" ].size == 0 )
+	{
+		level.grief_team_members[ "axis" ][ 0 ] = self;
 		self.team = "axis";
 		self.sessionteam = "axis";
 		self.pers[ "team" ] = "axis";
 		self._encounters_team = "A";
 	}
-	else if ( teamplayersallies < teamplayersaxis )
+	else 
 	{
-		self.team = "allies";
-		self.sessionteam = "allies";
-		self.pers[ "team" ] = "allies";
-		self._encounters_team = "B";
+		if ( level.grief_team_members[ "axis" ].size > level.grief_team_members[ "allies" ].size )
+		{
+			level.grief_team_members[ "allies" ][ level.grief_team_members[ "allies" ].size ] = self;
+			self.team = "allies";
+			self.sessionteam = "allies";
+			self.pers[ "team" ] = "allies";
+			self._encounters_team = "B";
+		}
+		else if ( level.grief_team_members[ "allies" ].size > level.grief_team_members[ "axis" ].size )
+		{
+			level.grief_team_members[ "axis" ][ level.grief_team_members[ "axis" ].size ] = self;
+			self.team = "axis";
+			self.sessionteam = "axis";
+			self.pers[ "team" ] = "axis";
+			self._encounters_team = "A";
+		}
+		else 
+		{
+			level.grief_team_members[ "allies" ][ level.grief_team_members[ "allies" ].size ] = self;
+			self.team = "allies";
+			self.sessionteam = "allies";
+			self.pers[ "team" ] = "allies";
+			self._encounters_team = "B";
+		}
 	}
-	else
-	{
-		self.team = "allies";
-		self.sessionteam = "allies";
-		self.pers[ "team" ] = "allies";
-		self._encounters_team = "B";
-	}
+	// teamplayersallies = getPlayers( "allies").size;
+	// teamplayersaxis = getPlayers( "axis").size;
+	// if ( teamplayersallies > teamplayersaxis )
+	// {
+	// 	self.team = "axis";
+	// 	self.sessionteam = "axis";
+	// 	self.pers[ "team" ] = "axis";
+	// 	self._encounters_team = "A";
+	// }
+	// else if ( teamplayersallies < teamplayersaxis )
+	// {
+	// 	self.team = "allies";
+	// 	self.sessionteam = "allies";
+	// 	self.pers[ "team" ] = "allies";
+	// 	self._encounters_team = "B";
+	// }
+	// else
+	// {
+	// 	self.team = "allies";
+	// 	self.sessionteam = "allies";
+	// 	self.pers[ "team" ] = "allies";
+	// 	self._encounters_team = "B";
+	// }
+	logprint( "teamplayersallies: " + level.grief_team_members[ "allies" ].size + " teamplayersaxis: " + level.grief_team_members[ "axis" ].size + " " + self.name + " team: " + self.team + "\n" );
 	self.pers["class"] = undefined;
 	self.curClass = undefined;
 	self.pers["weapon"] = undefined;

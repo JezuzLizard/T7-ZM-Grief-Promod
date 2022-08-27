@@ -25,8 +25,9 @@ function init()
 	// this is now handled in code ( not lan )
 	// see s_nextScriptClientId 
 	level.clientid = 0;
-	level.zombie_ai_limit = 64;
-	level.zombie_actor_limit = 64;
+	//level.zombie_ai_limit = getDvarInt( "grief_zombie_ai_limit" );
+	level.zombie_ai_limit = 32;
+	level.zombie_actor_limit = level.zombie_ai_limit;
 	if ( isDefined( level.grief_ffa ) && level.grief_ffa )
 	{
 		level.grief_ffa_team_character_index = randomint( 4 );
@@ -84,10 +85,15 @@ function disable_intersection_tracker( player )
 function add_bots()
 {
 	level flag::wait_till("initial_blackscreen_passed");
+	//bot_count = getDvarInt( "grief_bot_count" );
+	bot_count = 0;
+	if ( bot_count < 1 )
+	{
+		return;
+	}
 	logprint( "Adding bots\n" );
-	max_clients = getDvarInt( "com_maxclients" );
 	level.player_intersection_tracker_override = &disable_intersection_tracker;
-	for( i = 1; i < max_clients; i++ )
+	for( i = 0; i < bot_count; i++ )
 	{
 		wait 0.05;
 		bot = addTestClient();
@@ -222,6 +228,7 @@ function game_module_player_damage_callback( einflictor, eattacker, idamage, idf
 		self.last_griefed_by.attacker = eattacker;
 		self.last_griefed_by.meansofdeath = smeansofdeath;
 		self.last_griefed_by.weapon = sweapon;
+		self.last_griefed_by.time = getTime();
 		if ( isDefined( level._game_module_player_damage_grief_callback ) )
 		{
 			self [[ level._game_module_player_damage_grief_callback ]]( einflictor, eattacker, idamage, idflags, smeansofdeath, sweapon, vpoint, vdir, shitloc, psoffsettime );

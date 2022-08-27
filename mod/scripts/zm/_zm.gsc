@@ -628,8 +628,8 @@ function fade_out_intro_screen_zm( hold_black_time, fade_out_time, destroyed_aft
 	}
 	// level notify("fade_in_complete");
 	level flag::set("initial_blackscreen_passed");
-	logline1 = "_zm.gsc fade_out_intro_screen_zm() passes blackscreen " + "\n";
-	logprint( logline1 );
+	// logline1 = "_zm.gsc fade_out_intro_screen_zm() passes blackscreen " + "\n";
+	// logprint( logline1 );
 	level clientfield::set("gameplay_started", 1);
 }
 
@@ -647,8 +647,8 @@ function ShowHudAndPlayPromo()
 
 function onAllPlayersReady()
 {
-	logline1 = "_zm.gsc onAllPlayersReady() is called" + "\n";
-	logprint( logline1 );
+	// logline1 = "_zm.gsc onAllPlayersReady() is called" + "\n";
+	// logprint( logline1 );
 	timeOut = GetTime() + 5000;	// 5 second time out.
 	
 	while(IsLoadingCinematicPlaying() || (GetNumExpectedPlayers() == 0  && (GetTime() < timeOut)))
@@ -1287,7 +1287,8 @@ function init_levelvars()
 	level.laststandpistol				= level.default_laststandpistol;		// so we dont get the uber colt when we're knocked out
 	level.start_weapon					= level.default_laststandpistol;
 	level.first_round					= true;	
-	level.start_round					= 1;
+	//level.start_round					= getDvarInt( "grief_start_round" );
+	level.start_round					= 20;
 	level.round_number					= level.start_round;
 	level.enable_magic					= GetGametypeSetting( "magic" );
 	level.headshots_only				= GetGametypeSetting( "headshotsonly" );	
@@ -3810,7 +3811,7 @@ function get_safe_breadcrumb_pos( player )
 
 function round_spawning()
 {
-	logprint( "round_spawning is called \n" );
+	// logprint( "round_spawning is called \n" );
 	level endon( "intermission" );
 	level endon( "end_of_round" );
 	level endon( "restart_round" );
@@ -3869,13 +3870,13 @@ function round_spawning()
 	{
 		while( zombie_utility::get_current_zombie_count() >= level.zombie_ai_limit || level.zombie_total <= 0 )
 		{
-			logprint( "Too many alive zombies to spawn a new zombie \n" );
+			// logprint( "Too many alive zombies to spawn a new zombie \n" );
 			wait( 0.1 );
 		}
 		
 		while ( zombie_utility::get_current_actor_count() >= level.zombie_actor_limit )
 		{
-			logprint( "Too many zombies and corpses to spawn a new zombie \n" );
+			// logprint( "Too many zombies and corpses to spawn a new zombie \n" );
 			zombie_utility::clear_all_corpses();
 			wait( 0.1 );
 		}
@@ -3887,9 +3888,9 @@ function round_spawning()
 		}
 
 		// added ability to pause zombie spawning
-		logprint( "Waiting for flag spawn_zombies \n" );
+		// logprint( "Waiting for flag spawn_zombies \n" );
 		level flag::wait_till( "spawn_zombies" );
-		logprint( "Done waiting for flag spawn_zombies \n" );
+		// logprint( "Done waiting for flag spawn_zombies \n" );
 		
 		//Not great fix for this being zero - which it should NEVER be! (2 days to ship - PETER)
 		while( level.zm_loc_types[ "zombie_location" ].size <= 0 )
@@ -3901,7 +3902,7 @@ function round_spawning()
 		
 		if ( IS_TRUE(level.hostMigrationTimer) )
 		{
-			logprint( "level.hostMigrationTimer is true \n" );
+			// logprint( "level.hostMigrationTimer is true \n" );
 			util::wait_network_frame();
 			continue;
 		}
@@ -3912,7 +3913,7 @@ function round_spawning()
 			if ( [[ level.fn_custom_round_ai_spawn ]]() )
 			{
 				// we handled the spawn
-				logprint( "level.fn_custom_round_ai_spawn is defined and true \n" );
+				// logprint( "level.fn_custom_round_ai_spawn is defined and true \n" );
 				util::wait_network_frame();
 				continue;
 			}
@@ -3977,7 +3978,7 @@ function round_spawning()
 		}
 		else 
 		{
-			logprint( "Failed to spawn zombie \n" );
+			// logprint( "Failed to spawn zombie \n" );
 		}
 		util::wait_network_frame();
 	}
@@ -7199,16 +7200,7 @@ function refresh_player_navcard_hud()
 
 function set_default_laststand_pistol(solo_mode)
 {
-		
-	if (!solo_mode )
-	{
-		level.laststandpistol = level.default_laststandpistol;
-	}
-	else 
-	{
-		level.laststandpistol = level.default_solo_laststandpistol;
-	}
-	
+	level.laststandpistol = level.default_laststandpistol;
 }
 
 //109171 	Zombies - ZM_Global - Add check for player count at beginning of the game

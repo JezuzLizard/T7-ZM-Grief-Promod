@@ -280,72 +280,80 @@ function Callback_PlayerConnect()
 	if ( isdefined( self.pers["class"] ) )
 		self.curClass = self.pers["class"];
 
-	if ( !isdefined( self.pers["team"] ) || isdefined( self.pers["needteam"] ) )
-	{
-		// Don't set .sessionteam until we've gotten the assigned team from code,
-		// because it overrides the assigned team.
-		self.pers["needteam"] = undefined;
-		self.pers["team"] = "spectator";
-		self.team = "spectator";
-		self.sessionstate = "dead";
+	logprint( "callback_PlayerConnect----> Joined team: " + self.team + " " + self.name );	
+	// if ( !isdefined( self.pers["team"] ) )
+	// {
+	// 	// Don't set .sessionteam until we've gotten the assigned team from code,
+	// 	// because it overrides the assigned team.
+	// 	self.pers["needteam"] = undefined;
+	// 	self.pers["team"] = "spectator";
+	// 	self.team = "spectator";
+	// 	self.sessionstate = "dead";
 		
-		self globallogic_ui::updateObjectiveText();
+	// 	self globallogic_ui::updateObjectiveText();
 		
-		[[level.spawnSpectator]]();
+	// 	[[level.spawnSpectator]]();
 		
-		if ( level.rankedMatch )
-		{
-			[[level.autoassign]]( false );
+	// 	if ( level.rankedMatch )
+	// 	{
+	// 		[[level.autoassign]]( false );
 			
-			//self thread globallogic_spawn::forceSpawn();
-			self thread globallogic_spawn::kickIfDontSpawn();
-		}
-		else
-		{
-			[[level.autoassign]]( false );
-		}
+	// 		//self thread globallogic_spawn::forceSpawn();
+	// 		self thread globallogic_spawn::kickIfDontSpawn();
+	// 	}
+	// 	else
+	// 	{
+	// 		[[level.autoassign]]( false );
+	// 	}
 		
-		if ( self.pers["team"] == "spectator" )
-		{
-			self.sessionteam = "spectator";
-			self thread spectate_player_watcher();
-		}
+	// 	if ( self.pers["team"] == "spectator" )
+	// 	{
+	// 		self.sessionteam = "spectator";
+	// 		self thread spectate_player_watcher();
+	// 	}
 		
-		if ( level.teamBased )
-		{
-			// set team and spectate permissions so the map shows waypoint info on connect
-			self.sessionteam = self.pers["team"];
-			if ( !isAlive( self ) )
-				self.statusicon = "hud_status_dead";
-			self thread spectating::setSpectatePermissions();
-		}
-	}
-	else if ( self.pers["team"] == "spectator" )
+	// 	if ( level.teamBased )
+	// 	{
+	// 		// set team and spectate permissions so the map shows waypoint info on connect
+	// 		self.sessionteam = self.pers["team"];
+	// 		if ( !isAlive( self ) )
+	// 			self.statusicon = "hud_status_dead";
+	// 		self thread spectating::setSpectatePermissions();
+	// 	}
+	// }
+	// else if ( self.pers["team"] == "spectator" )
+	// {
+	// 	self SetClientScriptMainMenu( game[ "menu_start_menu" ] );
+	// 	[[level.spawnSpectator]]();
+	// 	self.sessionteam = "spectator";
+	// 	self.sessionstate = "spectator";
+	// 	self thread spectate_player_watcher();
+	// }
+	// else
+	// {
+	self.sessionteam = self.pers["team"];
+	self.sessionstate = "dead";
+
+	self globallogic_ui::updateObjectiveText();
+	
+	[[level.spawnSpectator]]();
+	if ( globallogic_utils::isValidClass( self.pers["class"] ) )
 	{
-		self SetClientScriptMainMenu( game[ "menu_start_menu" ] );
-		[[level.spawnSpectator]]();
-		self.sessionteam = "spectator";
-		self.sessionstate = "spectator";
-		self thread spectate_player_watcher();
+		self thread [[level.spawnClient]]();			
 	}
 	else
 	{
-		self.sessionteam = self.pers["team"];
-		self.sessionstate = "dead";
-
-		self globallogic_ui::updateObjectiveText();
-		
-		[[level.spawnSpectator]]();
-		if ( globallogic_utils::isValidClass( self.pers["class"] ) )
-		{
-			self thread [[level.spawnClient]]();			
-		}
-		else
-		{
-			self globallogic_ui::showMainMenuForTeam();
-		}		
-		self thread spectating::setSpectatePermissions();
-	}
+		self globallogic_ui::showMainMenuForTeam();
+	}		
+	self notify("joined_team");
+	level notify( "joined_team" );
+	self callback::callback( #"on_joined_team" );
+	self notify("end_respawn");
+	
+	self globallogic_ui::beginClassChoice();	
+	self SetClientScriptMainMenu( game[ "menu_start_menu" ] );
+	self thread spectating::setSpectatePermissions();
+	// }
 
 	if ( self.sessionteam != "spectator" )
 	{

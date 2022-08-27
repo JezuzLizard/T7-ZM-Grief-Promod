@@ -12,6 +12,8 @@ rawfile,zm_mod.cfg
 // note that if you make changes in the cfg, you need to build this fastfile for the game to get the latest
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 rawfile,ui/t7/utility/codscoreboardutility.lua
+rawfile,ui/uieditor/conditions.lua
+rawfile,ui/uieditor/conditionsOG.luac
 rawfile,ui/t7/utility/lobbyutility.lua //overrides an engine function to increase lobby size to 18
 rawfile,ui/t7/utility/lobbyutilityog.luac //the original lobbyutility.lua file left compiled
 //rawfile,lua/lobby/process/lobbyprocess.lua //sets the lobby to zombies
